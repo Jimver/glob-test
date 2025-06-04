@@ -20,11 +20,14 @@ export async function run(): Promise<void> {
 
   // List files in test directory using fs.promises
   const filesInCurrentDirectory = await fs.promises.readdir(dirPath)
-  core.debug(`Files in test directory: ${filesInCurrentDirectory}`)
+  core.debug(`Files in test directory '${dirPath}': ${filesInCurrentDirectory}`)
   // List files in current directory using glob
-  const globber = await glob.create(`${dirPath}/*`)
+  const globPattern = `${dirPath}/*`
+  const globber = await glob.create(globPattern)
   const filesInCurrentDirectoryGlob = await globber.glob()
-  core.debug(`Files in test directory (glob): ${filesInCurrentDirectoryGlob}`)
+  core.debug(
+    `Files in test directory (glob: '${globPattern}'): ${filesInCurrentDirectoryGlob}`
+  )
 
   // Get absolute path of test directory
   const absolutePath = fs.realpathSync(dirPath)
@@ -32,9 +35,12 @@ export async function run(): Promise<void> {
 
   // List files in absolute path using fs.promises
   const filesInAbsolutePath = await fs.promises.readdir(absolutePath)
-  core.debug(`Files in absolute path: ${filesInAbsolutePath}`)
+  core.debug(`Files in absolute path '${absolutePath}': ${filesInAbsolutePath}`)
   // List files in absolute path using glob
-  const globberAbsolute = await glob.create(`${absolutePath}/*`)
+  const globPatternAbsolute = `${absolutePath}/*`
+  const globberAbsolute = await glob.create(globPatternAbsolute)
   const filesInAbsolutePathGlob = await globberAbsolute.glob()
-  core.debug(`Files in absolute path (glob): ${filesInAbsolutePathGlob}`)
+  core.debug(
+    `Files in absolute path (glob: '${globPatternAbsolute}'): ${filesInAbsolutePathGlob}`
+  )
 }
