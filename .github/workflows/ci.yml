@@ -14,7 +14,19 @@ permissions:
 jobs:
   test-typescript:
     name: TypeScript Tests
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          [
+            windows-2025,
+            windows-2022,
+            ubuntu-24.04,
+            ubuntu-22.04,
+            ubuntu-24.04-arm,
+            ubuntu-22.04-arm
+          ]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
