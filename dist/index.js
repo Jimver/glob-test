@@ -29785,6 +29785,18 @@ async function run() {
     const globberAbsolute = await globExports.create(globPatternAbsolute);
     const filesInAbsolutePathGlob = await globberAbsolute.glob();
     coreExports.debug(`Files in absolute path (glob: '${globPatternAbsolute}'): ${filesInAbsolutePathGlob}`);
+    if (filesInCurrentDirectoryGlob.length === 0) {
+        throw new Error(`No files found in current directory using glob ${globPattern}: ${filesInCurrentDirectoryGlob}`);
+    }
+    if (filesInAbsolutePathGlob.length === 1) {
+        throw new Error(`No files found in absolute path using glob ${globPatternAbsolute}: ${filesInAbsolutePathGlob}`);
+    }
+    if (filesInCurrentDirectory.length === 0) {
+        throw new Error(`No files found in current directory using readdir ${dirPath}: ${filesInCurrentDirectory}`);
+    }
+    if (filesInAbsolutePath.length === 0) {
+        throw new Error(`No files found in absolute path using readdir ${absolutePath}: ${filesInAbsolutePath}`);
+    }
 }
 
 /**
