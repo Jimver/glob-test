@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import * as glob from '@actions/glob'
+import * as core from '@actions/core'
 
 const dirPath = `test-dir`
 const fileName = `test.txt`
@@ -16,8 +17,12 @@ describe('glob.ts', () => {
 
   it('Create file and check if it is there using glob * pattern', async () => {
     // List files in test directory using glob
-    const globber = await glob.create(`${dirPath}/*`)
+    const globPattern = `${dirPath}/*`
+    const globber = await glob.create(globPattern)
     const filesInCurrentDirectoryGlob = await globber.glob()
+    core.debug(
+      `Files in test directory (glob: '${globPattern}'): ${filesInCurrentDirectoryGlob}`
+    )
 
     expect(filesInCurrentDirectoryGlob).toHaveLength(1)
     expect(filesInCurrentDirectoryGlob[0]).toContain(fileName)
@@ -26,8 +31,13 @@ describe('glob.ts', () => {
 
   it('Create file and check if it is there using glob ** pattern', async () => {
     // List files in test directory using glob
-    const globber = await glob.create(`${dirPath}/**`)
+    const globPattern = `${dirPath}/**`
+    const globber = await glob.create(globPattern)
     const filesInCurrentDirectoryGlob = await globber.glob()
+
+    core.debug(
+      `Files in test directory (glob: '${globPattern}'): ${filesInCurrentDirectoryGlob}`
+    )
 
     expect(filesInCurrentDirectoryGlob).toHaveLength(2)
     expect(filesInCurrentDirectoryGlob[0]).toContain(dirPath)
@@ -41,6 +51,10 @@ describe('glob.ts', () => {
   it('Create file and check if it is there using readdir', async () => {
     // List files in test directory using fs.promises
     const filesInCurrentDirectory = await fs.promises.readdir(dirPath)
+
+    core.debug(
+      `Files in test directory '${dirPath}' (readdir): ${filesInCurrentDirectory}`
+    )
 
     expect(filesInCurrentDirectory).toContain('test.txt')
   })
