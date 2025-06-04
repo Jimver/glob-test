@@ -6,13 +6,15 @@ const fileName = `test.txt`
 const filePath = `${dirPath}/${fileName}`
 
 describe('glob.ts', () => {
-  it('Create file and check if it is there using glob * pattern', async () => {
+  beforeEach(async () => {
     // Create directory using fs.promises
     await fs.promises.mkdir(dirPath, { recursive: true })
 
     // Create a file in the test directory using fs.promises
     await fs.promises.writeFile(filePath, `test content`)
+  })
 
+  it('Create file and check if it is there using glob * pattern', async () => {
     // List files in test directory using glob
     const globber = await glob.create(`${dirPath}/*`)
     const filesInCurrentDirectoryGlob = await globber.glob()
@@ -20,19 +22,9 @@ describe('glob.ts', () => {
     expect(filesInCurrentDirectoryGlob).toHaveLength(1)
     expect(filesInCurrentDirectoryGlob[0]).toContain(fileName)
     expect(filesInCurrentDirectoryGlob[0]).toContain(dirPath)
-
-    // Cleanup: Remove the created file and directory
-    await fs.promises.unlink(filePath)
-    await fs.promises.rmdir(dirPath, { recursive: true })
   })
 
   it('Create file and check if it is there using glob ** pattern', async () => {
-    // Create directory using fs.promises
-    await fs.promises.mkdir(dirPath, { recursive: true })
-
-    // Create a file in the test directory using fs.promises
-    await fs.promises.writeFile(filePath, `test content`)
-
     // List files in test directory using glob
     const globber = await glob.create(`${dirPath}/**`)
     const filesInCurrentDirectoryGlob = await globber.glob()
@@ -44,24 +36,16 @@ describe('glob.ts', () => {
       filesInCurrentDirectoryGlob[0].includes(fileName) ||
         filesInCurrentDirectoryGlob[1].includes(fileName)
     ).toBeTruthy()
-
-    // Cleanup: Remove the created file and directory
-    await fs.promises.unlink(filePath)
-    await fs.promises.rmdir(dirPath, { recursive: true })
   })
 
   it('Create file and check if it is there using readdir', async () => {
-    // Create directory using fs.promises
-    await fs.promises.mkdir(dirPath, { recursive: true })
-
-    // Create a file in the test directory using fs.promises
-    await fs.promises.writeFile(filePath, `test content`)
-
     // List files in test directory using fs.promises
     const filesInCurrentDirectory = await fs.promises.readdir(dirPath)
 
     expect(filesInCurrentDirectory).toContain('test.txt')
+  })
 
+  afterEach(async () => {
     // Cleanup: Remove the created file and directory
     await fs.promises.unlink(filePath)
     await fs.promises.rmdir(dirPath, { recursive: true })
