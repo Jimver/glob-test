@@ -29788,7 +29788,7 @@ async function run() {
     if (filesInCurrentDirectoryGlob.length === 0) {
         throw new Error(`No files found in current directory using glob ${globPattern}: ${filesInCurrentDirectoryGlob}`);
     }
-    if (filesInAbsolutePathGlob.length === 1) {
+    if (filesInAbsolutePathGlob.length === 0) {
         throw new Error(`No files found in absolute path using glob ${globPatternAbsolute}: ${filesInAbsolutePathGlob}`);
     }
     if (filesInCurrentDirectory.length === 0) {
