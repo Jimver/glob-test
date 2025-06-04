@@ -47,7 +47,6 @@ describe('glob.ts', () => {
 
   afterEach(async () => {
     // Cleanup: Remove the created file and directory
-    await fs.promises.unlink(filePath)
     await fs.promises.rmdir(dirPath, { recursive: true })
   })
 })
