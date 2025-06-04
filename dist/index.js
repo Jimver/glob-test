@@ -29758,17 +29758,21 @@ var globExports = requireGlob();
  * @returns Resolves when the action is complete.
  */
 async function run() {
+    // Create directory using fs.promises
+    const dirPath = `test-dir`;
+    coreExports.debug(`Creating directory at ${dirPath}`);
+    await require$$1.promises.mkdir(dirPath, { recursive: true });
     // Create a file in the current working directory using fs.promises
-    const filePath = `test.txt`;
+    const filePath = `${dirPath}/test.txt`;
     coreExports.debug(`Creating file at ${filePath}`);
     require$$1.promises.writeFile(filePath, `test content`);
-    // List files in current directory using fs.promises
-    const filesInCurrentDirectory = await require$$1.promises.readdir(`.`);
-    coreExports.debug(`Files in current directory: ${filesInCurrentDirectory}`);
+    // List files in test directory using fs.promises
+    const filesInCurrentDirectory = await require$$1.promises.readdir(dirPath);
+    coreExports.debug(`Files in test directory: ${filesInCurrentDirectory}`);
     // List files in current directory using glob
-    const globber = await globExports.create(`*`);
+    const globber = await globExports.create(`${dirPath}/*`);
     const filesInCurrentDirectoryGlob = await globber.glob();
-    coreExports.debug(`Files in current directory (glob): ${filesInCurrentDirectoryGlob}`);
+    coreExports.debug(`Files in test directory (glob): ${filesInCurrentDirectoryGlob}`);
 }
 
 /**

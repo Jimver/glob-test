@@ -8,18 +8,21 @@ import fs from 'fs'
  * @returns Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
+  // Create directory using fs.promises
+  const dirPath = `test-dir`
+  core.debug(`Creating directory at ${dirPath}`)
+  await fs.promises.mkdir(dirPath, { recursive: true })
+
   // Create a file in the current working directory using fs.promises
-  const filePath = `test.txt`
+  const filePath = `${dirPath}/test.txt`
   core.debug(`Creating file at ${filePath}`)
   fs.promises.writeFile(filePath, `test content`)
 
-  // List files in current directory using fs.promises
-  const filesInCurrentDirectory = await fs.promises.readdir(`.`)
-  core.debug(`Files in current directory: ${filesInCurrentDirectory}`)
+  // List files in test directory using fs.promises
+  const filesInCurrentDirectory = await fs.promises.readdir(dirPath)
+  core.debug(`Files in test directory: ${filesInCurrentDirectory}`)
   // List files in current directory using glob
-  const globber = await glob.create(`*`)
+  const globber = await glob.create(`${dirPath}/*`)
   const filesInCurrentDirectoryGlob = await globber.glob()
-  core.debug(
-    `Files in current directory (glob): ${filesInCurrentDirectoryGlob}`
-  )
+  core.debug(`Files in test directory (glob): ${filesInCurrentDirectoryGlob}`)
 }
