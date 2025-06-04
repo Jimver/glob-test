@@ -50,7 +50,7 @@ export async function run(): Promise<void> {
     )
   }
 
-  if (filesInAbsolutePathGlob.length === 1) {
+  if (filesInAbsolutePathGlob.length === 0) {
     throw new Error(
       `No files found in absolute path using glob ${globPatternAbsolute}: ${filesInAbsolutePathGlob}`
     )
