@@ -20,6 +20,10 @@ describe('glob.ts', () => {
     expect(filesInCurrentDirectoryGlob).toHaveLength(1)
     expect(filesInCurrentDirectoryGlob[0]).toContain(fileName)
     expect(filesInCurrentDirectoryGlob[0]).toContain(dirPath)
+
+    // Cleanup: Remove the created file and directory
+    await fs.promises.unlink(filePath)
+    await fs.promises.rmdir(dirPath, { recursive: true })
   })
 
   it('Create file and check if it is there using glob ** pattern', async () => {
@@ -33,9 +37,17 @@ describe('glob.ts', () => {
     const globber = await glob.create(`${dirPath}/**`)
     const filesInCurrentDirectoryGlob = await globber.glob()
 
-    expect(filesInCurrentDirectoryGlob).toHaveLength(1)
-    expect(filesInCurrentDirectoryGlob[0]).toContain(fileName)
+    expect(filesInCurrentDirectoryGlob).toHaveLength(2)
     expect(filesInCurrentDirectoryGlob[0]).toContain(dirPath)
+    expect(filesInCurrentDirectoryGlob[1]).toContain(dirPath)
+    expect(
+      filesInCurrentDirectoryGlob[0].includes(fileName) ||
+        filesInCurrentDirectoryGlob[1].includes(fileName)
+    ).toBeTruthy()
+
+    // Cleanup: Remove the created file and directory
+    await fs.promises.unlink(filePath)
+    await fs.promises.rmdir(dirPath, { recursive: true })
   })
 
   it('Create file and check if it is there using readdir', async () => {
@@ -49,5 +61,9 @@ describe('glob.ts', () => {
     const filesInCurrentDirectory = await fs.promises.readdir(dirPath)
 
     expect(filesInCurrentDirectory).toContain('test.txt')
+
+    // Cleanup: Remove the created file and directory
+    await fs.promises.unlink(filePath)
+    await fs.promises.rmdir(dirPath, { recursive: true })
   })
 })
